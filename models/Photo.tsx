@@ -1,23 +1,24 @@
 import { createRealmContext, Realm } from "@realm/react";
+import { Note } from "./Note";
 
-export class Photo {
-    _id: Realm.BSON.ObjectId;
+export class PhotoI {
+    _id: any;
     note: string;
     path: string;
     createAt: Date;
 
-    constructor({id = new Realm.BSON.ObjectId(), note, path, createAt}: any){
-        this._id = id;
+    constructor({note, path, createAt}: any){
+        this._id = new Realm.BSON.ObjectId().toHexString();
         this.note = note;
         this.path = path;
         this.createAt = createAt;
     }
 
     static schema = {
-        name: 'Photo',
+        name: 'PhotoI',
         primaryKey: '_id',
         properties: {
-            _id: 'objectId',
+            _id: 'string',
             note: 'string',
             path: 'string',
             createAt: 'date',
@@ -26,5 +27,5 @@ export class Photo {
   }
 
   export const {useRealm, useQuery, RealmProvider} = createRealmContext({
-      schema: [Photo.schema]
+      schema: [Note.schema, PhotoI.schema, ]
   })

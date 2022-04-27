@@ -15,6 +15,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {Camera, useCameraDevices} from 'react-native-vision-camera';
 import {RealmProvider} from '../models/Photo';
 import CameraPage from './CameraPage';
+import InfoPage from './InfoPage';
+import LibraryPage from './LibraryPage';
 import PreviewPage from './PreviewPage';
 import {Routes} from './Routes';
 
@@ -50,6 +52,31 @@ export default function App({navigation}: any) {
             }}
             name="PreviewPage"
             component={PreviewPage}
+          />
+          <Stack.Screen
+            options={{
+              title: 'Thư viện',
+              headerStyle: {
+                backgroundColor: '#000000',
+              },
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+              headerTintColor: '#ffffff',
+            }}
+            name="LibraryPage"
+            component={LibraryPage}
+          />
+          <Stack.Screen
+            options={{
+              title: '',
+              headerStyle: {
+                backgroundColor: '#000000',
+              },
+              headerTintColor: '#ffffff',
+            }}
+            name="InfoPage"
+            component={InfoPage}
           />
         </Stack.Navigator>
       </NavigationContainer>

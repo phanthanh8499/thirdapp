@@ -3,7 +3,6 @@ import * as React from 'react';
 import {
   ActivityIndicator,
   Alert,
-  FlatList,
   Image,
   Modal,
   Pressable,
@@ -25,7 +24,7 @@ import {createRealmContext, Realm} from '@realm/react';
 import QRCode from 'react-native-qrcode-svg';
 import axios from 'axios';
 import DropDownPicker from 'react-native-dropdown-picker';
-import {Note} from '../models/Note';
+import { Note } from '../models/Note';
 // import {NativeModules} from 'react-native';
 // const RNFetchBlob = NativeModules.RNFetchBlob
 
@@ -62,19 +61,19 @@ const PreviewPage = ({navigation, route}: any) => {
 
   // let realm = Realm()
   // realm.deleteAll()
-  console.log('parse', JSON.parse(JSON.stringify(noteData)));
-
+console.log("parse", JSON.parse(JSON.stringify(noteData)))
+console.log(noteData.filtered("value = 'ca'"))
   console.log('ket qua', result.length);
   console.log('ket qua', result);
-  console.log('note data', noteData);
+  console.log('note data', noteData)
   console.log('_id', new Realm.BSON.ObjectId());
   // console.log("????");
   // console.log("key qua", result);
-  console.log('Da luu', noteDataJson);
+    console.log("Da luu", noteDataJson)
   React.useEffect(() => {
     setData(route.params.imgUri);
     setDate(route.params.date);
-    setNoteDataJson(JSON.parse(JSON.stringify(noteData)));
+    setNoteDataJson(JSON.parse(JSON.stringify(noteData)))
     // console.log('abc' + new Date(date));
     // var date = new Date();
     // setDate(date.getTime());
@@ -143,6 +142,7 @@ const PreviewPage = ({navigation, route}: any) => {
     }
   };
 
+
   const [open, setOpen] = React.useState(false);
   const [ta, setTa] = React.useState<string>('');
 
@@ -165,7 +165,6 @@ const PreviewPage = ({navigation, route}: any) => {
     console.log('nhan gia tri', value);
     setTa(value);
     setTextDisplay(value);
-    setDataLength(1);
     setOpen(false);
   };
 
@@ -188,7 +187,6 @@ const PreviewPage = ({navigation, route}: any) => {
           borderBottomWidth: 1,
           width: '95%',
           zIndex: 9,
-          marginHorizontal: 5,
         }}
         onPress={() => handleClick(value)}>
         <Text style={{fontSize: 15}}>{label}</Text>
@@ -214,7 +212,7 @@ const PreviewPage = ({navigation, route}: any) => {
                   style={{width: '100%', height: '100%'}}></Image>
               </View>
               <View style={{position: 'absolute', top: 0, right: 0, margin: 2}}>
-                <QRCode value={formatDate(date) + " - " + textDisplay} backgroundColor="none" />
+                <QRCode value="abc" backgroundColor="none" />
               </View>
               <View style={{position: 'relative', flexDirection: 'row'}}>
                 <View style={{flex: 4, marginLeft: 5}}>
@@ -296,8 +294,10 @@ const PreviewPage = ({navigation, route}: any) => {
                     }}
                     onFocus={() => setOpen(true)}
                     onChangeText={text => {
-                      var temp = noteData.filtered(
-                        `value CONTAINS[c] '${text}'`,
+                      var temp = items.filter(item =>
+                        item.label
+                          .toLocaleLowerCase()
+                          .includes(text.toLocaleLowerCase()),
                       );
                       setDataLength(temp.length);
                       setTa(text);
@@ -317,57 +317,54 @@ const PreviewPage = ({navigation, route}: any) => {
                       maxHeight: 170,
                       borderWidth: 1,
                       borderRadius: 10,
-                      justifyContent: 'center',
-                      alignItems: 'center',
                     }}>
-                    {open ? (
-                      <FlatList
-                      scrollEnabled
-                        style={{width: '100%', zIndex: 10}}
-                        contentContainerStyle={{justifyContent: 'center'}}
-                        data={
-                          ta !== ''
-                            ? noteData.filtered(`value CONTAINS[c] '${ta}'`)
-                            : noteData
-                        }
-                        renderItem={({item}: any) => (
-                          <DropDownItem
-                            label={item.value}
-                            value={item.value}></DropDownItem>
-                        )}
-                        keyExtractor={(item: any) => item._id}
-                      />
-                    ) : null}
+                    <ScrollView
+                      style={{zIndex: 10}}
+                      contentContainerStyle={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      {ta || (open && dataLength != 0)
+                        ? items
+                            .filter(item =>
+                              item.label
+                                .toLocaleUpperCase()
+                                .includes(ta.toLocaleUpperCase()),
+                            )
+                            .map((item, key) => (
+                              <DropDownItem
+                                label={item.label}
+                                value={item.value}
+                                key={key}></DropDownItem>
+                            ))
+                        : null}
 
-                    {ta && open && dataLength == 0 ? (
-                      <TouchableHighlight
-                        activeOpacity={0.6}
-                        underlayColor="#DDDDDD"
-                        style={{
-                          padding: 10,
-                          borderBottomColor: '#f0f0f0',
-                          backgroundColor: '#ffffff',
-                          borderBottomWidth: 1,
-                          width: '95%',
-                          zIndex: 9,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}
-                        onPress={() => handleClickAdd(ta)}>
-                        <Text style={{fontSize: 15, fontWeight: 'bold'}}>
-                          Thêm mới
-                        </Text>
-                      </TouchableHighlight>
-                    ) : null}
+                      {ta && open && dataLength == 0 ? (
+                        <TouchableHighlight
+                          activeOpacity={0.6}
+                          underlayColor="#DDDDDD"
+                          style={{
+                            padding: 10,
+                            borderBottomColor: '#f0f0f0',
+                            backgroundColor: '#ffffff',
+                            borderBottomWidth: 1,
+                            width: '95%',
+                            zIndex: 9,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}
+                          onPress={() => handleClickAdd(ta)}>
+                          <Text style={{fontSize: 15, fontWeight: 'bold'}}>
+                            Thêm mới
+                          </Text>
+                        </TouchableHighlight>
+                      ) : null}
+                    </ScrollView>
                   </View>
 
                   <Pressable
                     style={styles.modalBtn}
                     onPress={() => {
-                      if (ta !== textDisplay) {
-                        Alert.alert('Vui lòng nhập lại ghi chú');
-                        return false;
-                      }
                       setModalVisible(!modalVisible);
                       setIsEdit(true);
                       // setTextDisplay(text);

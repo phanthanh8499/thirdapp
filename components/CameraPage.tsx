@@ -56,6 +56,11 @@ const CameraPage = ({navigation} :any ) => {
     setCameraPosition(p => (p === 'back' ? 'front' : 'back'));
   }, []);
 
+
+  const openLibrary = () => {
+    navigation.navigate('LibraryPage')
+  }
+
   React.useEffect(() => {
     (async () => {
       const status = await Camera.requestCameraPermission();
@@ -77,8 +82,12 @@ const CameraPage = ({navigation} :any ) => {
               photo={true}
             />
             <View style={styles.footer}>
-              <View style={{flex: 2.5}}>
-                <Text></Text>
+              <View style={{flex: 2.5, justifyContent: 'center'}}>
+              <TouchableOpacity
+                  onPress={() => openLibrary()}
+                  style={styles.flipBtn}>
+                  <Icon name="image" size={25} color="#ffffff" />
+                </TouchableOpacity>
               </View>
               <View style={{flex: 1, alignItems: 'center'}}>
                 <TouchableOpacity
